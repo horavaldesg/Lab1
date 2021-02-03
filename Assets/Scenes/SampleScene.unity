@@ -1066,7 +1066,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1179943408}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 0}
   m_CullingMode: 0
@@ -1089,6 +1089,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 810a65d9c01724c1e9ce464be2b76a5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 1623352748}
+  walkSpeed: 2
 --- !u!1001 &1237673867
 PrefabInstance:
   m_ObjectHideFlags: 0
