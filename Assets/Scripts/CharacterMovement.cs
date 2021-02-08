@@ -9,7 +9,7 @@ public class CharacterMovement : MonoBehaviour
 	private float speedboost = 0;
 	float t = 0;
 	private float facing = 1;
-
+	float y;
 	private void Update()
 	{
 		float input = (Input.GetAxisRaw("Horizontal"));
@@ -56,8 +56,8 @@ public class CharacterMovement : MonoBehaviour
 		//{
 		//	transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, new Vector3(0f, 90f, 0f), Time.deltaTime * 4f);
 		//}
-
-		transform.position += new Vector3(0f, 0f, input * walkSpeed * speedboost * Time.deltaTime);
+		y -= 1;
+		transform.position += new Vector3(0f, y, input * walkSpeed * speedboost * Time.deltaTime);
 
 		animator.SetFloat("Speed", input);
 		Debug.Log(walkSpeed * speedboost);
