@@ -4,13 +4,20 @@ using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour
 {
-	[SerializeField] private Animator animator;
+	[SerializeField] private Animator playerAnimator;
+	[SerializeField] private Animator sniperAnimator;
 	[SerializeField] private float walkSpeed;
+	AudioSource bulletShot;
 	private float speedboost = 0;
 	float t = 0;
 	private float facing = 1;
 	float y;
-	private void Update()
+	bool canShoot = true;
+    private void Start()
+    {
+		bulletShot = GetComponent<AudioSource>();
+    }
+    private void Update()
 	{
 		float input = (Input.GetAxisRaw("Horizontal"));
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.D))
@@ -22,9 +29,11 @@ public class CharacterMovement : MonoBehaviour
 			
         }
         
-		if(Input.GetKeyUp(KeyCode.LeftShift) && Input.GetKey(KeyCode.D))
+		else if(Input.GetKeyUp(KeyCode.LeftShift))
         {
 			t = 0;
+		
+			
 			
 		}
 		else if(Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.A))
@@ -41,25 +50,52 @@ public class CharacterMovement : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-			animator.SetBool("Jump", true);
+			playerAnimator.SetBool("Jump", true);
         }
 		else if (Input.GetKeyUp(KeyCode.Space))
 		{
-			animator.SetBool("Jump", false);
+			playerAnimator.SetBool("Jump", false);
 		}
+        if (Input.GetMouseButton(1))
+        {
+			playerAnimator.SetBool("ADS", true);
+        }
 
-		//if (facing < 0)
-		//{
-		//	transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, new Vector3(0f, 270f, 0f), Time.deltaTime * 4f);
-		//}
-		//else if (facing > 0)
-		//{
-		//	transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, new Vector3(0f, 90f, 0f), Time.deltaTime * 4f);
-		//}
-		y -= 1;
-		transform.position += new Vector3(0f, y, input * walkSpeed * speedboost * Time.deltaTime);
 
-		animator.SetFloat("Speed", input);
+
+		else
+		{
+			playerAnimator.SetBool("ADS", false);
+		}
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (canShoot)
+            {
+                StartCoroutine(Shoot());
+            }
+        }
+
+        //if (facing < 0)
+        //{
+        //	transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, new Vector3(0f, 270f, 0f), Time.deltaTime * 4f);
+        //}
+        //else if (facing > 0)
+        //{
+        //	transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, new Vector3(0f, 90f, 0f), Time.deltaTime * 4f);
+        //}
+        transform.position += new Vector3(0f, 0f, input * walkSpeed * speedboost * Time.deltaTime);
+
+		playerAnimator.SetFloat("Speed", input);
 		Debug.Log(walkSpeed * speedboost);
 	}
+	IEnumerator Shoot()
+    {
+        canShoot = false;
+        bulletShot.Play();
+		ShootBullet.Spark(ShootBullet.bulletSpark);
+		yield return new WaitForSeconds(0.05f);
+		sniperAnimator.Play("Bolt");
+		yield return new WaitForSeconds(1.5f);
+		canShoot = true;
+    }
 }
